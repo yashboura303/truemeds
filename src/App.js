@@ -1,25 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Routes from './routes';
+import { Container } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const error = useSelector(state => state.main.error);
+    useEffect(() => {
+        if (error) {
+            toast.error('Something went wrong');
+        }
+    }, [error]);
+    return (
+        <Container className="">
+            <ToastContainer />
+            <Routes />
+        </Container>
+    );
 }
 
 export default App;
