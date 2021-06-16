@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, Card, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { verifyOTP } from '../../redux/actions/mainAction';
+import { toast } from 'react-toastify';
+
 export default function VerifyNumber() {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -11,11 +13,16 @@ export default function VerifyNumber() {
     const [otp, setOTP] = useState();
     const onSubmit = e => {
         e.preventDefault();
-        dispatch(verifyOTP(mobileNo, otp));
-        history.push('/');
+        if (otp.length !== 4) {
+            toast.error('Invalid otp');
+        } else {
+            dispatch(verifyOTP(mobileNo, otp)).then(result => {
+                history.push('/');
+            });
+        }
     };
     return (
-        <Card style={{ width: '18rem' }}>
+        <Card style={{ width: '18rem', 'margin-top': '100px' }} className="text-center mx-auto ">
             <Card.Body>
                 <Form onSubmit={onSubmit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">

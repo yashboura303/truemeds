@@ -1,6 +1,11 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { getPosts, logout } from '../../redux/actions/mainAction';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
-export default function index() {
+export default function Index() {
+    const dispatch = useDispatch();
+    const history = useHistory();
     return (
         <div>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -8,22 +13,16 @@ export default function index() {
                     <Navbar.Brand href="#home">Truemeds</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link href="#features">Features</Nav.Link>
-                            <Nav.Link href="#pricing">Pricing</Nav.Link>
-                            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Nav>
-                            <Nav.Link href="#deets">Logout</Nav.Link>
-                            <Nav.Link eventKey={2} href="#memes">
-                                Dank memes
-                            </Nav.Link>
+                        <Nav className="ml-auto">
+                            <span
+                                className="nav-link"
+                                onClick={() => {
+                                    dispatch(logout());
+                                    history.push('/login');
+                                }}
+                            >
+                                Logout
+                            </span>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

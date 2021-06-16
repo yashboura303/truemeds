@@ -33,6 +33,7 @@ export function verifyOTP(mobileNumber, code) {
             .then(
                 user => {
                     dispatch({ type: 'SIGNIN_SUCCESS', payload: user.data.Response.access_token });
+                    dispatch({ type: 'LOADING' });
                     localStorage.setItem('user', user.data.Response.access_token);
                 },
                 err => dispatch({ type: 'FAIL', payload: err })
@@ -44,18 +45,32 @@ export function getPosts(accessToken) {
         dispatch({ type: 'LOADING' });
         return axios
             .post(
-                `https://stage-services.truemeds.in/ArticleService/getArticleListing
+                `https://cors-anywhere.herokuapp.com/https://stage-services.truemeds.in/ArticleService/getArticleListing
                 `,
                 null,
                 {
                     headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Access-Control-Allow-Origin': '*',
                         Authorization: `Bearer ${accessToken}`,
                     },
                 }
             )
             .then(
-                data => dispatch({ type: 'ARTICLES_FETCHED', payload: data.result.article }),
-                err => dispatch({ type: 'FAIL', payload: err })
+                response => {
+                    dispatch({ type: 'ARTICLES_FETCHED', payload: response.data.result.article });
+                },
+                err => {
+                    console.log(err);
+                    if (err.response) {
+                        if (err.response.data.error === 'invalid_token') {
+                            dispatch({ type: 'LOGOUT' });
+                            localStorage.setItem('user', '');
+                        } else {
+                            dispatch({ type: 'FAIL', payload: err });
+                        }
+                    }
+                }
             );
     };
 }

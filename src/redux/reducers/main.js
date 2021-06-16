@@ -4,7 +4,7 @@ const initialState = {
     error: null,
     userToken: null,
     mobileNo: null,
-    artciles: null,
+    articles: null,
 };
 
 function mainReducer(state = initialState, action) {
@@ -25,7 +25,7 @@ function mainReducer(state = initialState, action) {
             return {
                 ...state,
                 error: null,
-                artciles: action.payload,
+                articles: action.payload,
             };
 
         case 'FAIL':

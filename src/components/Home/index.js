@@ -1,52 +1,74 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Countdown from 'react-countdown';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPosts } from '../../redux/actions/mainAction';
+import { useHistory } from 'react-router-dom';
+import { getPosts, logout } from '../../redux/actions/mainAction';
 import Article from './article';
-
+import { Row, Button, Container, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 const Index = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
+    const [toggleButton, settoggleButton] = useState(false);
     let userToken = useSelector(state => state.main.userToken);
     const articles = useSelector(state => state.main.articles);
     function useForceUpdate() {
-        const [value, setValue] = useState(0); // integer state
-        return () => setValue(value => value + 1); // update the state to force render
+        const [value, setValue] = useState(0);
+        return () => setValue(value => value + 1);
     }
-    const Completionist = () => <span>You are good to go!</span>;
+    useEffect(() => {
+        if (localStorage.getItem('user') === '') {
+            history.push('/login');
+        } else {
+            userToken = localStorage.getItem('user');
+        }
+    }, []);
     const clockRef = useRef();
     const forceUpdate = useForceUpdate();
     const handleStart = () => clockRef.current.start();
-    // Renderer callback with condition
     const renderer = ({ hours, minutes, seconds, completed }) => {
-        if (completed) {
-            // Render a completed state
-            return <Completionist />;
-        } else {
-            // Render a countdown
+        if (!completed) {
             return (
-                <span>
-                    {hours}:{minutes}:{seconds}
-                </span>
+                <h1 className="text-center">
+                    Fetching posts in {minutes}m:{seconds}s
+                </h1>
             );
+        } else {
+            return <></>;
         }
     };
 
     const onComplete = () => {
-        dispatch(getPosts(userToken));
+        toast.success('Fetching posts!');
+        settoggleButton(!toggleButton);
+        if (userToken) dispatch(getPosts(userToken));
+        else {
+            if (localStorage.getItem('user')) dispatch(getPosts(localStorage.getItem('user')));
+        }
     };
     return (
-        <div>
-            <button
-                onClick={() => {
-                    forceUpdate();
-                    handleStart();
-                }}
-            >
-                On Click
-            </button>
-            <Countdown date={Date.now() + 3000} onComplete={onComplete} renderer={renderer} ref={clockRef} />
-            <Article articles={articles} />
-        </div>
+        <Container className="text-center">
+            {toggleButton && (
+                <Button
+                    onClick={() => {
+                        forceUpdate();
+                        handleStart();
+                        settoggleButton(!toggleButton);
+                    }}
+                    className="my-2 text-center"
+                >
+                    Reset Timer
+                </Button>
+            )}
+            <Countdown date={Date.now() + 60000} onComplete={onComplete} renderer={renderer} ref={clockRef} />
+            <Row>
+                {!articles ? (
+                    <Spinner animation="grow" className="text-center mx-auto my-4" />
+                ) : (
+                    <Article articles={articles} />
+                )}
+            </Row>
+        </Container>
     );
 };
 

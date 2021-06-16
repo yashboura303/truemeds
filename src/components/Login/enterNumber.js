@@ -27,7 +27,7 @@ export default function EnterNumber() {
         }
     }, []);
     return (
-        <Card style={{ width: '18rem' }}>
+        <Card style={{ width: '18rem', 'margin-top': '100px' }} className="text-center mx-auto">
             <Card.Body>
                 <Form onSubmit={onSubmit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -38,6 +38,7 @@ export default function EnterNumber() {
                             onChange={e => {
                                 setNumber(e.target.value);
                             }}
+                            required
                         />
                     </Form.Group>
                     <Button variant="primary" type="submit">
