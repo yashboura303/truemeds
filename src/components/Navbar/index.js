@@ -6,6 +6,7 @@ import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 export default function Index() {
     const dispatch = useDispatch();
     const history = useHistory();
+    const user = useSelector(state => state.main.userToken);
     return (
         <div>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -13,17 +14,19 @@ export default function Index() {
                     <Navbar.Brand href="#home">Truemeds</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="ml-auto">
-                            <span
-                                className="nav-link"
-                                onClick={() => {
-                                    dispatch(logout());
-                                    history.push('/login');
-                                }}
-                            >
-                                Logout
-                            </span>
-                        </Nav>
+                        {user && (
+                            <Nav className="ml-auto">
+                                <span
+                                    className="nav-link"
+                                    onClick={() => {
+                                        dispatch(logout());
+                                        history.push('/login');
+                                    }}
+                                >
+                                    Logout
+                                </span>
+                            </Nav>
+                        )}
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

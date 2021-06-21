@@ -5,9 +5,17 @@ import Routes from './routes';
 import Navbar from './components/Navbar';
 import { Container } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
+import { setUser } from './redux/actions/mainAction';
 
 function App() {
     const error = useSelector(state => state.main.error);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (localStorage.getItem('user') !== '') {
+            dispatch(setUser(localStorage.getItem('user')));
+        }
+    }, []);
+
     useEffect(() => {
         if (error) {
             toast.error('Something went wrong');

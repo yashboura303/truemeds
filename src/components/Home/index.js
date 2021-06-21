@@ -19,8 +19,6 @@ const Index = () => {
     useEffect(() => {
         if (localStorage.getItem('user') === '') {
             history.push('/login');
-        } else {
-            userToken = localStorage.getItem('user');
         }
     }, []);
     const clockRef = useRef();

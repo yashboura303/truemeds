@@ -6,7 +6,6 @@ const header = {
 
 export function sendOTP(mobileNumber) {
     return dispatch => {
-        dispatch({ type: 'LOADING' });
         return axios
             .post(`https://stage-services.truemeds.in/CustomerService/sendOtp?mobileNo=${mobileNumber}`, null, {
                 headers: header,
@@ -20,7 +19,6 @@ export function sendOTP(mobileNumber) {
 
 export function verifyOTP(mobileNumber, code) {
     return dispatch => {
-        dispatch({ type: 'LOADING' });
         return axios
             .post(
                 `https://stage-services.truemeds.in/CustomerService/verifyOtp?mobileNo=${mobileNumber}&otp=${code}&de
@@ -33,7 +31,6 @@ export function verifyOTP(mobileNumber, code) {
             .then(
                 user => {
                     dispatch({ type: 'SIGNIN_SUCCESS', payload: user.data.Response.access_token });
-                    dispatch({ type: 'LOADING' });
                     localStorage.setItem('user', user.data.Response.access_token);
                 },
                 err => dispatch({ type: 'FAIL', payload: err })
@@ -42,7 +39,6 @@ export function verifyOTP(mobileNumber, code) {
 }
 export function getPosts(accessToken) {
     return dispatch => {
-        dispatch({ type: 'LOADING' });
         return axios
             .post(
                 `https://cors-anywhere.herokuapp.com/https://stage-services.truemeds.in/ArticleService/getArticleListing
@@ -78,5 +74,13 @@ export function logout() {
     localStorage.setItem('user', '');
     return {
         type: 'LOGOUT',
+    };
+}
+
+export function setUser(token) {
+    localStorage.setItem('user', token);
+    return {
+        type: 'SIGNIN_SUCCESS',
+        payload: token,
     };
 }

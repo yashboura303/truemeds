@@ -14,11 +14,7 @@ export default function EnterNumber() {
             toast.error('Invalid number');
         } else {
             dispatch(sendOTP(number));
-            // if (error === false) {
-            //     console.log('running');
-            //     toast.error('Enter OTP');
             history.push('/verify');
-            // }
         }
     };
     useEffect(() => {

@@ -27,7 +27,6 @@ function mainReducer(state = initialState, action) {
                 error: null,
                 articles: action.payload,
             };
-
         case 'FAIL':
             return {
                 ...state,
